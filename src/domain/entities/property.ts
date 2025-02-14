@@ -5,6 +5,12 @@ export class Property {
     private readonly maxGuests: number;
     private readonly basePricePerNight: number;
   constructor(id: string,name: string,description: string,maxGuests: number,basePricePerNight: number) {
+    if(!name){
+        throw new Error('Nome da propriedade deve ser preenchido');
+    }
+    if (maxGuests <= 0) {
+      throw new Error('Numero de hospedes deve ser maior que 0');
+    }
     this.id = id;
     this.name = name;
     this.description = description;
@@ -30,5 +36,11 @@ export class Property {
 
     getBasePricePerNight(): number {
         return this.basePricePerNight;
+    }
+
+    validateGuestCount(guests: number): void {
+        if (guests > this.maxGuests) {
+            throw new Error('Numero de hospedes excede o limite da propriedade');
+        }
     }
 }
