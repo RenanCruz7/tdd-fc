@@ -42,6 +42,13 @@ describe('Property Entity', () => {
 
         const totalPrice = property.calculateTotalPrice(dateRange);
         expect(totalPrice).toBe(1000);
+
+        const property1 = new Property('3', 'Casa de campo', 'Casa de campo linda', 5, 500);
+        const dateRange1 = new DateRange(new Date('2021-01-01'), new Date('2021-01-06'));
+
+        const totalPrice1 = property1.calculateTotalPrice(dateRange1);
+        expect(totalPrice1).toBe(2500); // 5 noites * 500
+
     });
 
     it('Deve aplicar desconto para estadias de 7 noites ou mais', () => {
@@ -49,6 +56,14 @@ describe('Property Entity', () => {
         const dateRange = new DateRange(new Date('2021-01-10'), new Date('2021-01-17'));
 
         const totalPrice = property.calculateTotalPrice(dateRange);
-        expect(totalPrice).toBe(3150); // 7 noites * 500 * 0.9
+        expect(totalPrice).toBe(3150);// 7 noites * 500 * 0.9
+
+
+
+        const property1 = new Property('3', 'Casa de campo', 'Casa de campo linda', 5, 500);
+        const dateRange1 = new DateRange(new Date('2021-01-10'), new Date('2021-01-25'));
+
+        const totalPrice1 = property1.calculateTotalPrice(dateRange1);
+        expect(totalPrice1).toBe(6750); // 15 noites * 500 * 0.9
     });
 });
