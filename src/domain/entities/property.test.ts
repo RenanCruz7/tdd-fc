@@ -1,5 +1,5 @@
 import { Property } from './property';
-
+import { DateRange } from '../value_objects/date_range';
 describe('Property Entity', () => {
 
     it('deve criar uma instancia de Property com todos os atributos', () => { 
@@ -36,4 +36,19 @@ describe('Property Entity', () => {
         }).toThrow('Numero de hospedes excede o limite da propriedade');
     });
 
+    it('Nao deve aplicar desconto para estadias menores que 7 dias', () => {
+        const property = new Property('3', 'Casa de campo', 'Casa de campo linda', 5, 500);
+        const dateRange = new DateRange(new Date('2021-01-01'), new Date('2021-01-03'));
+
+        const totalPrice = property.calculateTotalPrice(dateRange);
+        expect(totalPrice).toBe(1000);
+    });
+
+    it('Deve aplicar desconto para estadias de 7 noites ou mais', () => {
+        const property = new Property('3', 'Casa de campo', 'Casa de campo linda', 5, 500);
+        const dateRange = new DateRange(new Date('2021-01-10'), new Date('2021-01-17'));
+
+        const totalPrice = property.calculateTotalPrice(dateRange);
+        expect(totalPrice).toBe(3150); // 7 noites * 500 * 0.9
+    });
 });

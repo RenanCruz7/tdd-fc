@@ -1,3 +1,5 @@
+import { DateRange } from "../value_objects/date_range";
+
 export class Property {
     private readonly id: string;
     private readonly name: string;
@@ -43,4 +45,14 @@ export class Property {
             throw new Error('Numero de hospedes excede o limite da propriedade');
         }
     }
+
+    calculateTotalPrice(dateRange: DateRange): number {
+        const totalNight = dateRange.getTotalNights();
+        let totalPrice = totalNight * this.basePricePerNight;
+        if (totalNight >= 7) {
+            totalPrice = totalPrice * 0.9
+        }
+        return totalPrice
+    }
+
 }
