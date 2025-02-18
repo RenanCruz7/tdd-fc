@@ -9,6 +9,7 @@ export class Booking {
     private readonly DateRange: DateRange;
     private readonly guestCount: number
     private readonly status: 'CONFIRMED' | 'CANCELLED' = 'CONFIRMED';
+    private readonly totalPrice: number;
     constructor(
         id: string,
         property: Property,
@@ -16,11 +17,17 @@ export class Booking {
         DateRange: DateRange,
         guestCount: number
     ){
+        if(guestCount <= 0){
+            throw new Error('Numero de hospedes deve ser maior que 0');
+        }
+        property.validateGuestCount(guestCount);
+
         this.id = id;
         this.property = property;
         this.guest = guest;
         this.DateRange = DateRange;
         this.guestCount = guestCount;
+        this.totalPrice = property.calculateTotalPrice(DateRange);
 
         property.addBooking(this);
     }
@@ -45,5 +52,9 @@ export class Booking {
 
     getStatus(): 'CONFIRMED' | 'CANCELLED' {
         return this.status;
+    }
+
+    getTotalPrice(): number {
+        return this.totalPrice;
     }
 }
