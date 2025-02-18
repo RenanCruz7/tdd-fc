@@ -119,5 +119,19 @@ describe('Booking Entity', () => {
         expect(booking.getTotalPrice()).toBe(750);
     });
 
+    it('Nao deve permitir cancelar a mesma reservar mais que uma vez', () => {
+        const property = new Property('1', 'Casa de praia', 'Casa de praia em Guarapari', 4, 300);
+        const user = new User('1', 'João');
+        const dateRange = new DateRange(new Date('2024-12-20'), new Date('2024-12-25'));
+
+        const booking = new Booking('1', property, user, dateRange, 4);
+
+        const currentDate = new Date('2024-12-15');
+
+        booking.cancel(currentDate);
+
+        expect(() => booking.cancel(currentDate)).toThrow('Reserva já esta cancelada');
+    });
+
 
 });

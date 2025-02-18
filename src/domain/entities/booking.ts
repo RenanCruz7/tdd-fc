@@ -64,6 +64,9 @@ export class Booking {
     }
 
     cancel(currentDate: Date): void {
+        if (this.status === 'CANCELLED') {
+            throw new Error('Reserva já esta cancelada');
+        }
         this.status = 'CANCELLED';
 
         const checkInDate = this.DateRange.getStartDate();
