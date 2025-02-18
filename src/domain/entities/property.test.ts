@@ -1,5 +1,7 @@
 import { Property } from './property';
 import { DateRange } from '../value_objects/date_range';
+import { User } from './user';
+import { Booking } from './booking';
 describe('Property Entity', () => {
 
     it('deve criar uma instancia de Property com todos os atributos', () => { 
@@ -66,4 +68,31 @@ describe('Property Entity', () => {
         const totalPrice1 = property1.calculateTotalPrice(dateRange1);
         expect(totalPrice1).toBe(6750); // 15 noites * 500 * 0.9
     });
+
+
+    it('deve verificar a disponibilidade de uma propriedade' , () => {
+        const property = new Property('3', 'Casa de campo', 'Casa de campo linda', 5, 500);
+        const dateRange = new DateRange(new Date('2021-12-20'), new Date('2021-12-25'));
+        const user = new User('1', 'Joao', )
+
+        const dateRange2 = new DateRange(new Date('2021-12-22'), new Date('2021-12-27'));
+
+        new Booking('1', property, user, dateRange,5);
+
+        expect(property.isAvailable(dateRange)).toBe(false);
+        expect(property.isAvailable(dateRange2)).toBe(false);
+
+    });
+
+    it('Deve verificar se a funçao addBooking esta adicionando um booking corretamente', () => {
+        const property = new Property('3', 'Casa de campo', 'Casa de campo linda', 5, 500);
+        const dateRange = new DateRange(new Date('2021-12-20'), new Date('2021-12-25'));
+        const user = new User('1', 'Joao', )
+
+        const booking = new Booking('1', property, user, dateRange,5);
+
+        expect(property.getBooking().length).toBe(1);
+        expect(property.getBooking()[0]).toBe(booking);
+    })
+
 });

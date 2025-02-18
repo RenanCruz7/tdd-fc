@@ -1,4 +1,5 @@
 import { DateRange } from "../value_objects/date_range";
+import { Booking } from "./booking";
 
 export class Property {
     private readonly id: string;
@@ -6,6 +7,7 @@ export class Property {
     private readonly description: string;
     private readonly maxGuests: number;
     private readonly basePricePerNight: number;
+    private readonly bookings: Booking[] = [];
   constructor(id: string,name: string,description: string,maxGuests: number,basePricePerNight: number) {
     if(!name){
         throw new Error('Nome da propriedade deve ser preenchido');
@@ -55,4 +57,15 @@ export class Property {
         return totalPrice
     }
 
+    isAvailable(dateRange: DateRange): boolean {
+        return !this.bookings.some((booking) => booking.getStatus() === 'CONFIRMED' && booking.getDateRange().overlaps(dateRange));
+    }
+
+    addBooking(booking: Booking): void {
+        this.bookings.push(booking);
+    }
+
+    getBooking(): Booking[] {
+        return [...this.bookings];
+    }
 }
