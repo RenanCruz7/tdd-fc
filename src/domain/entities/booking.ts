@@ -22,6 +22,10 @@ export class Booking {
         }
         property.validateGuestCount(guestCount);
 
+        if(!property.isAvailable(DateRange)){
+            throw new Error('Propriedade não disponível para o período solicitado');
+        }
+
         this.id = id;
         this.property = property;
         this.guest = guest;

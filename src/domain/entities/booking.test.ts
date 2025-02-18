@@ -60,4 +60,16 @@ describe('Booking Entity', () => {
         // Assert
         expect(booking.getTotalPrice()).toBe(2430);
     });
+
+    it('Nao deve realizar o agendamento quando a propriedade nao estiver disponivel', () => {
+        const property = new Property('1', 'Casa de praia', 'Casa de praia em Guarapari', 4, 300);
+        const user = new User('1', 'João');
+        const dateRange = new DateRange(new Date('2024-12-01'), new Date('2024-12-10'));
+
+        const booking = new Booking('1', property, user, dateRange, 4);
+
+        const dateRange2 = new DateRange(new Date('2024-12-05'), new Date('2024-12-15'));
+
+        expect(() => new Booking('2', property, user, dateRange2, 4)).toThrow('Propriedade não disponível para o período solicitado');
+    });
 });
