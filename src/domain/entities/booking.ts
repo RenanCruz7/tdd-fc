@@ -8,21 +8,21 @@ export class Booking {
     private readonly guest: User;
     private readonly DateRange: DateRange;
     private readonly guestCount: number
-    private readonly status: 'CONFIRMED' | 'CANCELLED' = 'CONFIRMED';
-    private readonly totalPrice: number;
+    private status: 'CONFIRMED' | 'CANCELLED' = 'CONFIRMED';
+    private totalPrice: number;
     constructor(
         id: string,
         property: Property,
         guest: User,
         DateRange: DateRange,
         guestCount: number
-    ){
-        if(guestCount <= 0){
+    ) {
+        if (guestCount <= 0) {
             throw new Error('Numero de hospedes deve ser maior que 0');
         }
         property.validateGuestCount(guestCount);
 
-        if(!property.isAvailable(DateRange)){
+        if (!property.isAvailable(DateRange)) {
             throw new Error('Propriedade não disponível para o período solicitado');
         }
 
@@ -32,6 +32,7 @@ export class Booking {
         this.DateRange = DateRange;
         this.guestCount = guestCount;
         this.totalPrice = property.calculateTotalPrice(DateRange);
+        this.status = 'CONFIRMED';
 
         property.addBooking(this);
     }
@@ -39,7 +40,7 @@ export class Booking {
     getId(): string {
         return this.id;
     }
-    getProperty(): Property {      
+    getProperty(): Property {
         return this.property;
     }
 
@@ -60,5 +61,19 @@ export class Booking {
 
     getTotalPrice(): number {
         return this.totalPrice;
+    }
+
+    cancel(currentDate: Date): void {
+        this.status = 'CANCELLED';
+
+        const checkInDate = this.DateRange.getStartDate();
+        const timeDiff = checkInDate.getTime() - currentDate.getTime();
+        const daysUntilCheckIn = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+        if (daysUntilCheckIn > 7) {
+            this.totalPrice = 0;
+        }else if (daysUntilCheckIn >= 1){
+            this.totalPrice = this.totalPrice * 0.5;
+        }
     }
 }
