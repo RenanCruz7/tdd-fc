@@ -149,4 +149,39 @@ describe('BookingService', () => {
 
         await expect(bookingService.createBooking(bookingDTO)).rejects.toThrow('Propriedade não disponível para o período solicitado');
     });
+
+
+    it('Deve cancelar uma reserva utilizando o repository fake', async () => {
+        // Mocks de property e user
+        const mockProperty = {
+            getId: jest.fn().mockReturnValue('1'),
+            isAvailable: jest.fn().mockReturnValue(true),
+            validateGuestCount: jest.fn(), // Corrigido aqui
+            calculateTotalPrice: jest.fn().mockReturnValue(500),
+            addBooking: jest.fn()
+        } as any;
+
+        const mockUser = {
+            getId: jest.fn().mockReturnValue('1')
+        } as any;
+
+        // Busca dos resultados de property e user
+        mockPropertyService.findPropertyById.mockResolvedValue(mockProperty);
+        mockUserService.findUserById.mockResolvedValue(mockUser);
+
+        const bookingDTO: CreateBookingDTO = {
+            propertyId: '1',
+            guestId: '1',
+            startDate: new Date('2021-10-10'),
+            endDate: new Date('2021-10-15'),
+            guestCount: 2
+        }
+
+        const booking = await bookingService.createBooking(bookingDTO);
+
+        await bookingService.cancelBooking(booking.getId());
+
+        const canceledBooking = await fakeBookingRepository.findById(booking.getId());
+        expect(canceledBooking?.getStatus()).toBe('CANCELLED');
+    });
 });
