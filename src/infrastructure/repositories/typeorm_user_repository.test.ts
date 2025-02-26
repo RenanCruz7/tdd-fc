@@ -1,6 +1,8 @@
 import { Type } from './../../../node_modules/path-scurry/dist/commonjs/index.d';
 import { DataSource, Repository } from "typeorm";
 import { User } from "../../domain/entities/user";
+import { UserEntity } from "../persistence/entities/user_entity";
+import { TypeORMUserRepository } from "./typeorm_user_repository";
 
 describe('TypeORMUserRepository', () => {
     let dataSource: DataSource;
@@ -31,7 +33,7 @@ describe('TypeORMUserRepository', () => {
 
         await userRepository.save(user);
 
-        const savedUser = await userRepository.findOne({ where: { id: '1' } });
+        const savedUser = await repository.findOne({ where: { id: '1' } });
 
         expect(savedUser).not.toBeNull();
         expect(savedUser?.id).toBe('1');
