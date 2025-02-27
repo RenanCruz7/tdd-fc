@@ -45,4 +45,21 @@ describe('TypeORMPropertyRepository', () => {
         expect(savedProperty?.id).toBe('1');
     });
 
+
+    it('Deve buscar uma propriedade com um ID valido', async () => {
+        const property = new Property(
+            '1',
+            'Casa na Praia',
+            'Vista para o mar',
+            6,
+            200
+        )
+
+        await propertyRepository.save(property);
+        const savedProperty = await propertyRepository.findById('1');
+        expect(savedProperty).not.toBeNull();
+        expect(savedProperty?.getId()).toBe('1');
+        expect(savedProperty?.getName()).toBe('Casa na Praia');
+    });
+
 });
