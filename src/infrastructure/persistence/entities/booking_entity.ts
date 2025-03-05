@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { PropertyEntity } from "./property_entity";
+import { UserEntity } from "./user_entity";
 
 @Entity('bookings')
 export class BookingEntity{
@@ -6,18 +8,30 @@ export class BookingEntity{
     @PrimaryColumn('uuid')
     id!: string;
 
-    @Column()
+    @ManyToOne(() => PropertyEntity, (property) => property.bookings,{
+        nullable: false
+    })
+    @JoinColumn({name: 'property_id'})
+    property!: PropertyEntity;
+
+    @ManyToOne(() => UserEntity,{
+        nullable: false
+    })
+    @JoinColumn({name: 'guest_id'})
+    guest!: UserEntity;
+
+    @Column({type: 'datetime', name: 'start_date'})
     startDate!: Date;
 
-    @Column()
+    @Column({type: 'datetime', name: 'end_date'})
     endDate!: Date;
 
-    @Column()
+    @Column({name:'guest_count'})
     guestCount!: number;
 
     @Column()
     status!: 'CONFIRMED' | 'CANCELLED';
 
-    @Column()
+    @Column({name: 'total_price', type: 'decimal'})
     totalPrice!: number;
 }

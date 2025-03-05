@@ -3,6 +3,7 @@ import { UserEntity } from "../persistence/entities/user_entity";
 import { TypeORMPropertyRepository } from "./typeorm_property_repository";
 import { PropertyEntity } from "../persistence/entities/property_entity";
 import { Property } from "../../domain/entities/property";
+import { BookingEntity } from "../persistence/entities/booking_entity";
 
 
 describe('TypeORMPropertyRepository', () => {
@@ -15,7 +16,7 @@ describe('TypeORMPropertyRepository', () => {
             type: 'sqlite',
             database: ':memory:',
             dropSchema: true,
-            entities: [UserEntity,PropertyEntity],
+            entities: [UserEntity,PropertyEntity,BookingEntity],
             synchronize: true,
             logging: false
         });
@@ -45,14 +46,13 @@ describe('TypeORMPropertyRepository', () => {
         expect(savedProperty?.id).toBe('1');
     });
 
-
     it('Deve buscar uma propriedade com um ID valido', async () => {
         const property = new Property(
             '1',
             'Casa na Praia',
             'Vista para o mar',
             6,
-            200
+            300
         )
 
         await propertyRepository.save(property);

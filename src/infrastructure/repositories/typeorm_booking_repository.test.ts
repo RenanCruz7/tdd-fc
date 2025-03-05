@@ -9,7 +9,7 @@ import { DateRange } from '../../domain/value_objects/date_range';
 import { Booking } from '../../domain/entities/booking';
 
 
-describe('TypeORMPropertyRepository', () => {
+describe('TypeORMBookingRepository', () => {
     let dataSource: DataSource;
     let bookingRepository: TypeORMBookingRepository;
 
@@ -71,8 +71,5 @@ describe('TypeORMPropertyRepository', () => {
         expect(savedBooking?.getUser().getId()).toBe('1');
 
     });
-
-
-
 
 });
