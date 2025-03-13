@@ -8,6 +8,10 @@ import { UserMapper } from "./user_mapper";
 export class BookingMapper {
 
     static toDomain(entity: BookingEntity, property?: Property): Booking {
+        if (!entity.id || !entity.property || !entity.guest || !entity.startDate || !entity.endDate || entity.guestCount === undefined || !entity.status || entity.totalPrice === undefined) {
+            throw new Error('Campos obrigatórios estão faltando no BookingEntity');
+        }
+
         const guest = UserMapper.toDomain(entity.guest);
         const dateRange = new DateRange(entity.startDate, entity.endDate);
 
