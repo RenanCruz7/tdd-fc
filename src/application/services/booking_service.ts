@@ -14,45 +14,38 @@ export class BookingService {
         private readonly userService: UserService
     ){}
 
-
-    /**
-     * Ja havia feito o testo da propriedade e do usuario, agora preciso fazer o teste do booking
-     * utilizei os mocks para evitar a dependencia de outras classes e somente me concentrar na classe que estou testando que 
-     * é a BookingService
-     */
-
-
-
     async createBooking(dto: CreateBookingDTO): Promise<Booking> {
         const property = await this.propertyService.findPropertyById(dto.propertyId);
 
-       if(!property){
-        throw new Error('Propriedade não encontrada');
-       }
+        if(!property){
+            throw new Error('Propriedade não encontrada');
+        }
 
-       const guest = await this.userService.findUserById(dto.guestId);
-       if(!guest){
-        throw new Error('Usuario não encontrado');
-       }
+        const guest = await this.userService.findUserById(dto.guestId);
+        if(!guest){
+            throw new Error('Usuario não encontrado');
+        }
 
-       const dateRange = new DateRange(dto.startDate, dto.endDate); // altamento acoplado precisa de mock para ser usado
+        const dateRange = new DateRange(dto.startDate, dto.endDate);
 
-       const booking = new Booking(
-        uuid(),
-        property,
-        guest,
-        dateRange,
-        dto.guestCount
-       )
+        const booking = new Booking(
+            uuid(),
+            property,
+            guest,
+            dateRange,
+            dto.guestCount
+        )
 
-       await this.bookingRepository.save(booking);
-       return booking;
+        await this.bookingRepository.save(booking);
+        return booking;
     }
 
     async cancelBooking(bookingId: string): Promise<void> {
         const booking = await this.bookingRepository.findById(bookingId);
-        booking?.cancel(new Date());
-        await this.bookingRepository.save(booking!);
+        if (!booking) {
+            throw new Error('Reserva não encontrada.');
+        }
+        booking.cancel(new Date());
+        await this.bookingRepository.save(booking);
     }
 }
-   
